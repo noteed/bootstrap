@@ -1,6 +1,34 @@
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery')) :
+	typeof define === 'function' && define.amd ? define(['jquery'], factory) :
+	(global.Button = factory(global.$));
+}(this, (function ($) { 'use strict';
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+$ = $ && 'default' in $ ? $['default'] : $;
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
 
 /**
  * --------------------------------------------------------------------------
@@ -9,39 +37,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * --------------------------------------------------------------------------
  */
 
-var Button = function ($) {
+/**
+ * ------------------------------------------------------------------------
+ * Constants
+ * ------------------------------------------------------------------------
+ */
 
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
+var NAME = 'button';
+var VERSION = '4.0.0-alpha.6';
+var DATA_KEY = 'bs.button';
+var EVENT_KEY = '.' + DATA_KEY;
+var DATA_API_KEY = '.data-api';
+var JQUERY_NO_CONFLICT = $.fn[NAME];
 
-  var NAME = 'button';
-  var VERSION = '4.0.0-alpha.6';
-  var DATA_KEY = 'bs.button';
-  var EVENT_KEY = '.' + DATA_KEY;
-  var DATA_API_KEY = '.data-api';
-  var JQUERY_NO_CONFLICT = $.fn[NAME];
+var ClassName = {
+  ACTIVE: 'active',
+  BUTTON: 'btn',
+  FOCUS: 'focus'
+};
 
-  var ClassName = {
-    ACTIVE: 'active',
-    BUTTON: 'btn',
-    FOCUS: 'focus'
-  };
+var Selector = {
+  DATA_TOGGLE_CARROT: '[data-toggle^="button"]',
+  DATA_TOGGLE: '[data-toggle="buttons"]',
+  INPUT: 'input',
+  ACTIVE: '.active',
+  BUTTON: '.btn'
+};
 
-  var Selector = {
-    DATA_TOGGLE_CARROT: '[data-toggle^="button"]',
-    DATA_TOGGLE: '[data-toggle="buttons"]',
-    INPUT: 'input',
-    ACTIVE: '.active',
-    BUTTON: '.btn'
-  };
-
-  var Event = {
-    CLICK_DATA_API: 'click' + EVENT_KEY + DATA_API_KEY,
-    FOCUS_BLUR_DATA_API: 'focus' + EVENT_KEY + DATA_API_KEY + ' ' + ('blur' + EVENT_KEY + DATA_API_KEY)
-  };
+var Event = {
+  CLICK_DATA_API: 'click' + EVENT_KEY + DATA_API_KEY,
+  FOCUS_BLUR_DATA_API: 'focus' + EVENT_KEY + DATA_API_KEY + ' ' + ('blur' + EVENT_KEY + DATA_API_KEY)
 
   /**
    * ------------------------------------------------------------------------
@@ -49,18 +74,23 @@ var Button = function ($) {
    * ------------------------------------------------------------------------
    */
 
-  var Button = function () {
-    function Button(element) {
-      _classCallCheck(this, Button);
+};
+var Button = function () {
+  function Button(element) {
+    classCallCheck(this, Button);
 
-      this._element = element;
-    }
+    this._element = element;
+  }
 
-    // getters
+  // getters
+
+  createClass(Button, [{
+    key: 'toggle',
+
 
     // public
 
-    Button.prototype.toggle = function toggle() {
+    value: function toggle() {
       var triggerChangeEvent = true;
       var addAriaPressed = true;
       var rootElement = $(this._element).closest(Selector.DATA_TOGGLE)[0];
@@ -101,16 +131,19 @@ var Button = function ($) {
       if (triggerChangeEvent) {
         $(this._element).toggleClass(ClassName.ACTIVE);
       }
-    };
-
-    Button.prototype.dispose = function dispose() {
+    }
+  }, {
+    key: 'dispose',
+    value: function dispose() {
       $.removeData(this._element, DATA_KEY);
       this._element = null;
-    };
+    }
 
     // static
 
-    Button._jQueryInterface = function _jQueryInterface(config) {
+  }], [{
+    key: '_jQueryInterface',
+    value: function _jQueryInterface(config) {
       return this.each(function () {
         var data = $(this).data(DATA_KEY);
 
@@ -123,52 +156,45 @@ var Button = function ($) {
           data[config]();
         }
       });
-    };
-
-    _createClass(Button, null, [{
-      key: 'VERSION',
-      get: function get() {
-        return VERSION;
-      }
-    }]);
-
-    return Button;
-  }();
-
-  /**
-   * ------------------------------------------------------------------------
-   * Data Api implementation
-   * ------------------------------------------------------------------------
-   */
-
-  $(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE_CARROT, function (event) {
-    event.preventDefault();
-
-    var button = event.target;
-
-    if (!$(button).hasClass(ClassName.BUTTON)) {
-      button = $(button).closest(Selector.BUTTON);
     }
-
-    Button._jQueryInterface.call($(button), 'toggle');
-  }).on(Event.FOCUS_BLUR_DATA_API, Selector.DATA_TOGGLE_CARROT, function (event) {
-    var button = $(event.target).closest(Selector.BUTTON)[0];
-    $(button).toggleClass(ClassName.FOCUS, /^focus(in)?$/.test(event.type));
-  });
-
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-  $.fn[NAME] = Button._jQueryInterface;
-  $.fn[NAME].Constructor = Button;
-  $.fn[NAME].noConflict = function () {
-    $.fn[NAME] = JQUERY_NO_CONFLICT;
-    return Button._jQueryInterface;
-  };
-
+  }, {
+    key: 'VERSION',
+    get: function get$$1() {
+      return VERSION;
+    }
+  }]);
   return Button;
-}(jQuery);
+}();
+
+$(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE_CARROT, function (event) {
+  event.preventDefault();
+
+  var button = event.target;
+
+  if (!$(button).hasClass(ClassName.BUTTON)) {
+    button = $(button).closest(Selector.BUTTON);
+  }
+
+  Button._jQueryInterface.call($(button), 'toggle');
+}).on(Event.FOCUS_BLUR_DATA_API, Selector.DATA_TOGGLE_CARROT, function (event) {
+  var button = $(event.target).closest(Selector.BUTTON)[0];
+  $(button).toggleClass(ClassName.FOCUS, /^focus(in)?$/.test(event.type));
+});
+
+/**
+ * ------------------------------------------------------------------------
+ * jQuery
+ * ------------------------------------------------------------------------
+ */
+
+$.fn[NAME] = Button._jQueryInterface;
+$.fn[NAME].Constructor = Button;
+$.fn[NAME].noConflict = function () {
+  $.fn[NAME] = JQUERY_NO_CONFLICT;
+  return Button._jQueryInterface;
+};
+
+return Button;
+
+})));
 //# sourceMappingURL=button.js.map

@@ -1,6 +1,35 @@
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery'), require('./util.js')) :
+	typeof define === 'function' && define.amd ? define(['jquery', './util.js'], factory) :
+	(global.Tab = factory(global.$,global.Util));
+}(this, (function ($,Util) { 'use strict';
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+$ = $ && 'default' in $ ? $['default'] : $;
+Util = Util && 'default' in Util ? Util['default'] : Util;
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
 
 /**
  * --------------------------------------------------------------------------
@@ -9,46 +38,43 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * --------------------------------------------------------------------------
  */
 
-var Tab = function ($) {
+/**
+ * ------------------------------------------------------------------------
+ * Constants
+ * ------------------------------------------------------------------------
+ */
 
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
+var NAME = 'tab';
+var VERSION = '4.0.0-alpha.6';
+var DATA_KEY = 'bs.tab';
+var EVENT_KEY = '.' + DATA_KEY;
+var DATA_API_KEY = '.data-api';
+var JQUERY_NO_CONFLICT = $.fn[NAME];
+var TRANSITION_DURATION = 150;
 
-  var NAME = 'tab';
-  var VERSION = '4.0.0-alpha.6';
-  var DATA_KEY = 'bs.tab';
-  var EVENT_KEY = '.' + DATA_KEY;
-  var DATA_API_KEY = '.data-api';
-  var JQUERY_NO_CONFLICT = $.fn[NAME];
-  var TRANSITION_DURATION = 150;
+var Event = {
+  HIDE: 'hide' + EVENT_KEY,
+  HIDDEN: 'hidden' + EVENT_KEY,
+  SHOW: 'show' + EVENT_KEY,
+  SHOWN: 'shown' + EVENT_KEY,
+  CLICK_DATA_API: 'click' + EVENT_KEY + DATA_API_KEY
+};
 
-  var Event = {
-    HIDE: 'hide' + EVENT_KEY,
-    HIDDEN: 'hidden' + EVENT_KEY,
-    SHOW: 'show' + EVENT_KEY,
-    SHOWN: 'shown' + EVENT_KEY,
-    CLICK_DATA_API: 'click' + EVENT_KEY + DATA_API_KEY
-  };
+var ClassName = {
+  DROPDOWN_MENU: 'dropdown-menu',
+  ACTIVE: 'active',
+  DISABLED: 'disabled',
+  FADE: 'fade',
+  SHOW: 'show'
+};
 
-  var ClassName = {
-    DROPDOWN_MENU: 'dropdown-menu',
-    ACTIVE: 'active',
-    DISABLED: 'disabled',
-    FADE: 'fade',
-    SHOW: 'show'
-  };
-
-  var Selector = {
-    DROPDOWN: '.dropdown',
-    NAV_LIST_GROUP: '.nav, .list-group',
-    ACTIVE: '.active',
-    DATA_TOGGLE: '[data-toggle="tab"], [data-toggle="pill"], [data-toggle="list"]',
-    DROPDOWN_TOGGLE: '.dropdown-toggle',
-    DROPDOWN_ACTIVE_CHILD: '> .dropdown-menu .active'
-  };
+var Selector = {
+  DROPDOWN: '.dropdown',
+  NAV_LIST_GROUP: '.nav, .list-group',
+  ACTIVE: '.active',
+  DATA_TOGGLE: '[data-toggle="tab"], [data-toggle="pill"], [data-toggle="list"]',
+  DROPDOWN_TOGGLE: '.dropdown-toggle',
+  DROPDOWN_ACTIVE_CHILD: '> .dropdown-menu .active'
 
   /**
    * ------------------------------------------------------------------------
@@ -56,18 +82,23 @@ var Tab = function ($) {
    * ------------------------------------------------------------------------
    */
 
-  var Tab = function () {
-    function Tab(element) {
-      _classCallCheck(this, Tab);
+};
+var Tab = function () {
+  function Tab(element) {
+    classCallCheck(this, Tab);
 
-      this._element = element;
-    }
+    this._element = element;
+  }
 
-    // getters
+  // getters
+
+  createClass(Tab, [{
+    key: 'show',
+
 
     // public
 
-    Tab.prototype.show = function show() {
+    value: function show() {
       var _this = this;
 
       if (this._element.parentNode && this._element.parentNode.nodeType === Node.ELEMENT_NODE && $(this._element).hasClass(ClassName.ACTIVE) || $(this._element).hasClass(ClassName.DISABLED)) {
@@ -126,16 +157,19 @@ var Tab = function ($) {
       } else {
         complete();
       }
-    };
-
-    Tab.prototype.dispose = function dispose() {
+    }
+  }, {
+    key: 'dispose',
+    value: function dispose() {
       $.removeData(this._element, DATA_KEY);
       this._element = null;
-    };
+    }
 
     // private
 
-    Tab.prototype._activate = function _activate(element, container, callback) {
+  }, {
+    key: '_activate',
+    value: function _activate(element, container, callback) {
       var _this2 = this;
 
       var active = $(container).find(Selector.ACTIVE)[0];
@@ -154,9 +188,10 @@ var Tab = function ($) {
       if (active) {
         $(active).removeClass(ClassName.SHOW);
       }
-    };
-
-    Tab.prototype._transitionComplete = function _transitionComplete(element, active, isTransitioning, callback) {
+    }
+  }, {
+    key: '_transitionComplete',
+    value: function _transitionComplete(element, active, isTransitioning, callback) {
       if (active) {
         $(active).removeClass(ClassName.ACTIVE);
 
@@ -192,11 +227,13 @@ var Tab = function ($) {
       if (callback) {
         callback();
       }
-    };
+    }
 
     // static
 
-    Tab._jQueryInterface = function _jQueryInterface(config) {
+  }], [{
+    key: '_jQueryInterface',
+    value: function _jQueryInterface(config) {
       return this.each(function () {
         var $this = $(this);
         var data = $this.data(DATA_KEY);
@@ -213,42 +250,35 @@ var Tab = function ($) {
           data[config]();
         }
       });
-    };
-
-    _createClass(Tab, null, [{
-      key: 'VERSION',
-      get: function get() {
-        return VERSION;
-      }
-    }]);
-
-    return Tab;
-  }();
-
-  /**
-   * ------------------------------------------------------------------------
-   * Data Api implementation
-   * ------------------------------------------------------------------------
-   */
-
-  $(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE, function (event) {
-    event.preventDefault();
-    Tab._jQueryInterface.call($(this), 'show');
-  });
-
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-  $.fn[NAME] = Tab._jQueryInterface;
-  $.fn[NAME].Constructor = Tab;
-  $.fn[NAME].noConflict = function () {
-    $.fn[NAME] = JQUERY_NO_CONFLICT;
-    return Tab._jQueryInterface;
-  };
-
+    }
+  }, {
+    key: 'VERSION',
+    get: function get$$1() {
+      return VERSION;
+    }
+  }]);
   return Tab;
-}(jQuery);
+}();
+
+$(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE, function (event) {
+  event.preventDefault();
+  Tab._jQueryInterface.call($(this), 'show');
+});
+
+/**
+ * ------------------------------------------------------------------------
+ * jQuery
+ * ------------------------------------------------------------------------
+ */
+
+$.fn[NAME] = Tab._jQueryInterface;
+$.fn[NAME].Constructor = Tab;
+$.fn[NAME].noConflict = function () {
+  $.fn[NAME] = JQUERY_NO_CONFLICT;
+  return Tab._jQueryInterface;
+};
+
+return Tab;
+
+})));
 //# sourceMappingURL=tab.js.map
