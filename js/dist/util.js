@@ -44,7 +44,8 @@ function getSpecialTransitionEndEvent() {
     delegateType: transition.end,
     handle: function handle(event) {
       if ($(event.target).is(this)) {
-        return event.handleObj.handler.apply(this, arguments); // eslint-disable-line prefer-rest-params
+        return event.handleObj.handler.apply(this, arguments // eslint-disable-line prefer-rest-params
+        );
       }
       return undefined;
     }
@@ -148,12 +149,23 @@ var Util = {
         }
       }
     }
+  },
+  nodeEnv: function nodeEnv() {
+    try {
+      // Thanks to iliakan https://goo.gl/Hi4DcC
+      // eslint-disable-next-line no-undef
+      return Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
+    } catch (e) {
+      return false;
+    }
   }
 };
 
-$(document).ready(function () {
-  setTransitionEndSupport();
-});
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    setTransitionEndSupport();
+  });
+}
 
 return Util;
 

@@ -1,8 +1,14 @@
+/*!
+ * Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ * Copyright 2011-2017 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery')) :
-	typeof define === 'function' && define.amd ? define(['jquery'], factory) :
-	(global.bootstrap = factory(global.$));
-}(this, (function ($) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jquery')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'jquery'], factory) :
+	(factory((global.bootstrap = global.bootstrap || {}),global.$));
+}(this, (function (exports,$) { 'use strict';
 
 $ = $ && 'default' in $ ? $['default'] : $;
 
@@ -44,7 +50,8 @@ function getSpecialTransitionEndEvent() {
     delegateType: transition.end,
     handle: function handle(event) {
       if ($(event.target).is(this)) {
-        return event.handleObj.handler.apply(this, arguments); // eslint-disable-line prefer-rest-params
+        return event.handleObj.handler.apply(this, arguments // eslint-disable-line prefer-rest-params
+        );
       }
       return undefined;
     }
@@ -148,12 +155,23 @@ var Util = {
         }
       }
     }
+  },
+  nodeEnv: function nodeEnv() {
+    try {
+      // Thanks to iliakan https://goo.gl/Hi4DcC
+      // eslint-disable-next-line no-undef
+      return Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
+    } catch (e) {
+      return false;
+    }
   }
 };
 
-$(document).ready(function () {
-  setTransitionEndSupport();
-});
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    setTransitionEndSupport();
+  });
+}
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -393,6 +411,30 @@ var Alert = function () {
       };
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * Data Api implementation
+       * ------------------------------------------------------------------------
+       */
+
+      $(document).on(Event.CLICK_DATA_API, Selector.DISMISS, Alert._handleDismiss(new Alert())
+
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      );$.fn[NAME] = Alert._jQueryInterface;
+      $.fn[NAME].Constructor = Alert;
+      $.fn[NAME].noConflict = function () {
+        $.fn[NAME] = JQUERY_NO_CONFLICT;
+        return Alert._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
     get: function get$$1() {
       return VERSION;
@@ -401,20 +443,11 @@ var Alert = function () {
   return Alert;
 }();
 
-$(document).on(Event.CLICK_DATA_API, Selector.DISMISS, Alert._handleDismiss(new Alert()));
-
-/**
- * ------------------------------------------------------------------------
- * jQuery
- * ------------------------------------------------------------------------
- */
-
-$.fn[NAME] = Alert._jQueryInterface;
-$.fn[NAME].Constructor = Alert;
-$.fn[NAME].noConflict = function () {
-  $.fn[NAME] = JQUERY_NO_CONFLICT;
-  return Alert._jQueryInterface;
-};
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    Alert._init();
+  });
+}
 
 /**
  * --------------------------------------------------------------------------
@@ -544,6 +577,43 @@ var Button = function () {
       });
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * Data Api implementation
+       * ------------------------------------------------------------------------
+       */
+
+      $(document).on(Event$1.CLICK_DATA_API, Selector$1.DATA_TOGGLE_CARROT, function (event) {
+        event.preventDefault();
+
+        var button = event.target;
+
+        if (!$(button).hasClass(ClassName$1.BUTTON)) {
+          button = $(button).closest(Selector$1.BUTTON);
+        }
+
+        Button._jQueryInterface.call($(button), 'toggle');
+      }).on(Event$1.FOCUS_BLUR_DATA_API, Selector$1.DATA_TOGGLE_CARROT, function (event) {
+        var button = $(event.target).closest(Selector$1.BUTTON)[0];
+        $(button).toggleClass(ClassName$1.FOCUS, /^focus(in)?$/.test(event.type));
+      }
+
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      );$.fn[NAME$1] = Button._jQueryInterface;
+      $.fn[NAME$1].Constructor = Button;
+      $.fn[NAME$1].noConflict = function () {
+        $.fn[NAME$1] = JQUERY_NO_CONFLICT$1;
+        return Button._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
     get: function get$$1() {
       return VERSION$1;
@@ -552,33 +622,11 @@ var Button = function () {
   return Button;
 }();
 
-$(document).on(Event$1.CLICK_DATA_API, Selector$1.DATA_TOGGLE_CARROT, function (event) {
-  event.preventDefault();
-
-  var button = event.target;
-
-  if (!$(button).hasClass(ClassName$1.BUTTON)) {
-    button = $(button).closest(Selector$1.BUTTON);
-  }
-
-  Button._jQueryInterface.call($(button), 'toggle');
-}).on(Event$1.FOCUS_BLUR_DATA_API, Selector$1.DATA_TOGGLE_CARROT, function (event) {
-  var button = $(event.target).closest(Selector$1.BUTTON)[0];
-  $(button).toggleClass(ClassName$1.FOCUS, /^focus(in)?$/.test(event.type));
-});
-
-/**
- * ------------------------------------------------------------------------
- * jQuery
- * ------------------------------------------------------------------------
- */
-
-$.fn[NAME$1] = Button._jQueryInterface;
-$.fn[NAME$1].Constructor = Button;
-$.fn[NAME$1].noConflict = function () {
-  $.fn[NAME$1] = JQUERY_NO_CONFLICT$1;
-  return Button._jQueryInterface;
-};
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    Button._init();
+  });
+}
 
 /**
  * --------------------------------------------------------------------------
@@ -1061,6 +1109,37 @@ var Carousel = function () {
       event.preventDefault();
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * Data Api implementation
+       * ------------------------------------------------------------------------
+       */
+
+      $(document).on(Event$2.CLICK_DATA_API, Selector$2.DATA_SLIDE, Carousel._dataApiClickHandler);
+
+      $(window).on(Event$2.LOAD_DATA_API, function () {
+        $(Selector$2.DATA_RIDE).each(function () {
+          var $carousel = $(this);
+          Carousel._jQueryInterface.call($carousel, $carousel.data());
+        });
+      }
+
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      );$.fn[NAME$2] = Carousel._jQueryInterface;
+      $.fn[NAME$2].Constructor = Carousel;
+      $.fn[NAME$2].noConflict = function () {
+        $.fn[NAME$2] = JQUERY_NO_CONFLICT$2;
+        return Carousel._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
     get: function get$$1() {
       return VERSION$2;
@@ -1074,27 +1153,11 @@ var Carousel = function () {
   return Carousel;
 }();
 
-$(document).on(Event$2.CLICK_DATA_API, Selector$2.DATA_SLIDE, Carousel._dataApiClickHandler);
-
-$(window).on(Event$2.LOAD_DATA_API, function () {
-  $(Selector$2.DATA_RIDE).each(function () {
-    var $carousel = $(this);
-    Carousel._jQueryInterface.call($carousel, $carousel.data());
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    Carousel._init();
   });
-});
-
-/**
- * ------------------------------------------------------------------------
- * jQuery
- * ------------------------------------------------------------------------
- */
-
-$.fn[NAME$2] = Carousel._jQueryInterface;
-$.fn[NAME$2].Constructor = Carousel;
-$.fn[NAME$2].noConflict = function () {
-  $.fn[NAME$2] = JQUERY_NO_CONFLICT$2;
-  return Carousel._jQueryInterface;
-};
+}
 
 /**
  * --------------------------------------------------------------------------
@@ -1349,8 +1412,8 @@ var Collapse = function () {
     key: '_getConfig',
     value: function _getConfig(config) {
       config = $.extend({}, Default$1, config);
-      config.toggle = Boolean(config.toggle); // coerce string values
-      Util.typeCheckConfig(NAME$3, config, DefaultType$1);
+      config.toggle = Boolean(config.toggle // coerce string values
+      );Util.typeCheckConfig(NAME$3, config, DefaultType$1);
       return config;
     }
   }, {
@@ -1419,6 +1482,43 @@ var Collapse = function () {
       });
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * Data Api implementation
+       * ------------------------------------------------------------------------
+       */
+
+      $(document).on(Event$3.CLICK_DATA_API, Selector$3.DATA_TOGGLE, function (event) {
+        if (!/input|textarea/i.test(event.target.tagName)) {
+          event.preventDefault();
+        }
+
+        var $trigger = $(this);
+        var selector = Util.getSelectorFromElement(this);
+        $(selector).each(function () {
+          var $target = $(this);
+          var data = $target.data(DATA_KEY$3);
+          var config = data ? 'toggle' : $trigger.data();
+          Collapse._jQueryInterface.call($target, config);
+        });
+      }
+
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      );$.fn[NAME$3] = Collapse._jQueryInterface;
+      $.fn[NAME$3].Constructor = Collapse;
+      $.fn[NAME$3].noConflict = function () {
+        $.fn[NAME$3] = JQUERY_NO_CONFLICT$3;
+        return Collapse._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
     get: function get$$1() {
       return VERSION$3;
@@ -1432,33 +1532,11 @@ var Collapse = function () {
   return Collapse;
 }();
 
-$(document).on(Event$3.CLICK_DATA_API, Selector$3.DATA_TOGGLE, function (event) {
-  if (!/input|textarea/i.test(event.target.tagName)) {
-    event.preventDefault();
-  }
-
-  var $trigger = $(this);
-  var selector = Util.getSelectorFromElement(this);
-  $(selector).each(function () {
-    var $target = $(this);
-    var data = $target.data(DATA_KEY$3);
-    var config = data ? 'toggle' : $trigger.data();
-    Collapse._jQueryInterface.call($target, config);
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    Collapse._init();
   });
-});
-
-/**
- * ------------------------------------------------------------------------
- * jQuery
- * ------------------------------------------------------------------------
- */
-
-$.fn[NAME$3] = Collapse._jQueryInterface;
-$.fn[NAME$3].Constructor = Collapse;
-$.fn[NAME$3].noConflict = function () {
-  $.fn[NAME$3] = JQUERY_NO_CONFLICT$3;
-  return Collapse._jQueryInterface;
-};
+}
 
 var nativeHints = ['native code', '[object MutationObserverConstructor]'];
 
@@ -1956,8 +2034,6 @@ function getOffsetRectRelativeToArbitraryNode(children, parent) {
     width: childrenRect.width,
     height: childrenRect.height
   });
-  offsets.marginTop = 0;
-  offsets.marginLeft = 0;
 
   // Subtract margins of documentElement in case it's being used as parent
   // we do this only on HTML because it's the only element that behaves
@@ -3146,14 +3222,6 @@ function offset(data, _ref) {
  */
 function preventOverflow(data, options) {
   var boundariesElement = options.boundariesElement || getOffsetParent(data.instance.popper);
-
-  // If offsetParent is the reference element, we really want to
-  // go one step up and use the next offsetParent as reference to
-  // avoid to make this modifier completely useless and look like broken
-  if (data.instance.reference === boundariesElement) {
-    boundariesElement = getOffsetParent(boundariesElement);
-  }
-
   var boundaries = getBoundaries(data.instance.popper, data.instance.reference, options.padding, boundariesElement);
   options.boundaries = boundaries;
 
@@ -4241,6 +4309,36 @@ var Dropdown = function () {
       items[index].focus();
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * Data Api implementation
+       * ------------------------------------------------------------------------
+       */
+
+      $(document).on(Event$4.KEYDOWN_DATA_API, Selector$4.DATA_TOGGLE, Dropdown._dataApiKeydownHandler).on(Event$4.KEYDOWN_DATA_API, Selector$4.MENU, Dropdown._dataApiKeydownHandler).on(Event$4.CLICK_DATA_API + ' ' + Event$4.KEYUP_DATA_API, Dropdown._clearMenus).on(Event$4.CLICK_DATA_API, Selector$4.DATA_TOGGLE, function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        Dropdown._jQueryInterface.call($(this), 'toggle');
+      }).on(Event$4.CLICK_DATA_API, Selector$4.FORM_CHILD, function (e) {
+        e.stopPropagation();
+      }
+
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      );$.fn[NAME$4] = Dropdown._jQueryInterface;
+      $.fn[NAME$4].Constructor = Dropdown;
+      $.fn[NAME$4].noConflict = function () {
+        $.fn[NAME$4] = JQUERY_NO_CONFLICT$4;
+        return Dropdown._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
     get: function get$$1() {
       return VERSION$4;
@@ -4259,26 +4357,11 @@ var Dropdown = function () {
   return Dropdown;
 }();
 
-$(document).on(Event$4.KEYDOWN_DATA_API, Selector$4.DATA_TOGGLE, Dropdown._dataApiKeydownHandler).on(Event$4.KEYDOWN_DATA_API, Selector$4.MENU, Dropdown._dataApiKeydownHandler).on(Event$4.CLICK_DATA_API + ' ' + Event$4.KEYUP_DATA_API, Dropdown._clearMenus).on(Event$4.CLICK_DATA_API, Selector$4.DATA_TOGGLE, function (event) {
-  event.preventDefault();
-  event.stopPropagation();
-  Dropdown._jQueryInterface.call($(this), 'toggle');
-}).on(Event$4.CLICK_DATA_API, Selector$4.FORM_CHILD, function (e) {
-  e.stopPropagation();
-});
-
-/**
- * ------------------------------------------------------------------------
- * jQuery
- * ------------------------------------------------------------------------
- */
-
-$.fn[NAME$4] = Dropdown._jQueryInterface;
-$.fn[NAME$4].Constructor = Dropdown;
-$.fn[NAME$4].noConflict = function () {
-  $.fn[NAME$4] = JQUERY_NO_CONFLICT$4;
-  return Dropdown._jQueryInterface;
-};
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    Dropdown._init();
+  });
+}
 
 /**
  * --------------------------------------------------------------------------
@@ -4556,8 +4639,8 @@ var Modal = function () {
     value: function _enforceFocus() {
       var _this4 = this;
 
-      $(document).off(Event$5.FOCUSIN) // guard against infinite focus loop
-      .on(Event$5.FOCUSIN, function (event) {
+      $(document).off(Event$5.FOCUSIN // guard against infinite focus loop
+      ).on(Event$5.FOCUSIN, function (event) {
         if (document !== event.target && _this4._element !== event.target && !$(_this4._element).has(event.target).length) {
           _this4._element.focus();
         }
@@ -4729,17 +4812,17 @@ var Modal = function () {
           var actualPadding = $(element)[0].style.paddingRight;
           var calculatedPadding = $(element).css('padding-right');
           $(element).data('padding-right', actualPadding).css('padding-right', parseFloat(calculatedPadding) + _this9._scrollbarWidth + 'px');
-        });
+        }
 
         // Adjust navbar-toggler margin
-        $(Selector$5.NAVBAR_TOGGLER).each(function (index, element) {
+        );$(Selector$5.NAVBAR_TOGGLER).each(function (index, element) {
           var actualMargin = $(element)[0].style.marginRight;
           var calculatedMargin = $(element).css('margin-right');
           $(element).data('margin-right', actualMargin).css('margin-right', parseFloat(calculatedMargin) + _this9._scrollbarWidth + 'px');
-        });
+        }
 
         // Adjust body padding
-        var actualPadding = document.body.style.paddingRight;
+        );var actualPadding = document.body.style.paddingRight;
         var calculatedPadding = $('body').css('padding-right');
         $('body').data('padding-right', actualPadding).css('padding-right', parseFloat(calculatedPadding) + this._scrollbarWidth + 'px');
       }
@@ -4753,18 +4836,18 @@ var Modal = function () {
         if (typeof padding !== 'undefined') {
           $(element).css('padding-right', padding).removeData('padding-right');
         }
-      });
+      }
 
       // Restore navbar-toggler margin
-      $(Selector$5.NAVBAR_TOGGLER).each(function (index, element) {
+      );$(Selector$5.NAVBAR_TOGGLER).each(function (index, element) {
         var margin = $(element).data('margin-right');
         if (typeof margin !== 'undefined') {
           $(element).css('margin-right', margin).removeData('margin-right');
         }
-      });
+      }
 
       // Restore body padding
-      var padding = $('body').data('padding-right');
+      );var padding = $('body').data('padding-right');
       if (typeof padding !== 'undefined') {
         $('body').css('padding-right', padding).removeData('padding-right');
       }
@@ -4806,6 +4889,60 @@ var Modal = function () {
       });
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * Data Api implementation
+       * ------------------------------------------------------------------------
+       */
+
+      $(document).on(Event$5.CLICK_DATA_API, Selector$5.DATA_TOGGLE, function (event) {
+        var _this10 = this;
+
+        var target = void 0;
+        var selector = Util.getSelectorFromElement(this);
+
+        if (selector) {
+          target = $(selector)[0];
+        }
+
+        var config = $(target).data(DATA_KEY$5) ? 'toggle' : $.extend({}, $(target).data(), $(this).data());
+
+        if (this.tagName === 'A' || this.tagName === 'AREA') {
+          event.preventDefault();
+        }
+
+        var $target = $(target).one(Event$5.SHOW, function (showEvent) {
+          if (showEvent.isDefaultPrevented()) {
+            // only register focus restorer if modal will actually get shown
+            return;
+          }
+
+          $target.one(Event$5.HIDDEN, function () {
+            if ($(_this10).is(':visible')) {
+              _this10.focus();
+            }
+          });
+        });
+
+        Modal._jQueryInterface.call($(target), config, this);
+      }
+
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      );$.fn[NAME$5] = Modal._jQueryInterface;
+      $.fn[NAME$5].Constructor = Modal;
+      $.fn[NAME$5].noConflict = function () {
+        $.fn[NAME$5] = JQUERY_NO_CONFLICT$5;
+        return Modal._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
     get: function get$$1() {
       return VERSION$5;
@@ -4819,50 +4956,11 @@ var Modal = function () {
   return Modal;
 }();
 
-$(document).on(Event$5.CLICK_DATA_API, Selector$5.DATA_TOGGLE, function (event) {
-  var _this10 = this;
-
-  var target = void 0;
-  var selector = Util.getSelectorFromElement(this);
-
-  if (selector) {
-    target = $(selector)[0];
-  }
-
-  var config = $(target).data(DATA_KEY$5) ? 'toggle' : $.extend({}, $(target).data(), $(this).data());
-
-  if (this.tagName === 'A' || this.tagName === 'AREA') {
-    event.preventDefault();
-  }
-
-  var $target = $(target).one(Event$5.SHOW, function (showEvent) {
-    if (showEvent.isDefaultPrevented()) {
-      // only register focus restorer if modal will actually get shown
-      return;
-    }
-
-    $target.one(Event$5.HIDDEN, function () {
-      if ($(_this10).is(':visible')) {
-        _this10.focus();
-      }
-    });
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    Modal._init();
   });
-
-  Modal._jQueryInterface.call($(target), config, this);
-});
-
-/**
- * ------------------------------------------------------------------------
- * jQuery
- * ------------------------------------------------------------------------
- */
-
-$.fn[NAME$5] = Modal._jQueryInterface;
-$.fn[NAME$5].Constructor = Modal;
-$.fn[NAME$5].noConflict = function () {
-  $.fn[NAME$5] = JQUERY_NO_CONFLICT$5;
-  return Modal._jQueryInterface;
-};
+}
 
 /**
  * --------------------------------------------------------------------------
@@ -5130,13 +5228,13 @@ var Tooltip = function () {
           }
         });
 
-        $(tip).addClass(ClassName$7.SHOW);
+        $(tip).addClass(ClassName$7.SHOW
 
         // if this is a touch-enabled device we add extra
         // empty mouseover listeners to the body's immediate children;
         // only needed because of broken event delegation on iOS
         // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
-        if ('ontouchstart' in document.documentElement) {
+        );if ('ontouchstart' in document.documentElement) {
           $('body').children().on('mouseover', null, $.noop);
         }
 
@@ -5191,11 +5289,11 @@ var Tooltip = function () {
         return;
       }
 
-      $(tip).removeClass(ClassName$7.SHOW);
+      $(tip).removeClass(ClassName$7.SHOW
 
       // if this is a touch-enabled device we remove the extra
       // empty mouseover listeners we added for iOS support
-      if ('ontouchstart' in document.documentElement) {
+      );if ('ontouchstart' in document.documentElement) {
         $('body').children().off('mouseover', null, $.noop);
       }
 
@@ -5504,6 +5602,22 @@ var Tooltip = function () {
       });
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      $.fn[NAME$7] = Tooltip._jQueryInterface;
+      $.fn[NAME$7].Constructor = Tooltip;
+      $.fn[NAME$7].noConflict = function () {
+        $.fn[NAME$7] = JQUERY_NO_CONFLICT$7;
+        return Tooltip._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
     get: function get$$1() {
       return VERSION$7;
@@ -5542,12 +5656,11 @@ var Tooltip = function () {
   return Tooltip;
 }();
 
-$.fn[NAME$7] = Tooltip._jQueryInterface;
-$.fn[NAME$7].Constructor = Tooltip;
-$.fn[NAME$7].noConflict = function () {
-  $.fn[NAME$7] = JQUERY_NO_CONFLICT$7;
-  return Tooltip._jQueryInterface;
-};
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    Tooltip._init();
+  });
+}
 
 /**
  * --------------------------------------------------------------------------
@@ -5640,10 +5753,10 @@ var Popover = function (_Tooltip) {
   }, {
     key: 'setContent',
     value: function setContent() {
-      var $tip = $(this.getTipElement());
+      var $tip = $(this.getTipElement()
 
       // we use append for html objects to maintain js events
-      this.setElementContent($tip.find(Selector$6.TITLE), this.getTitle());
+      );this.setElementContent($tip.find(Selector$6.TITLE), this.getTitle());
       this.setElementContent($tip.find(Selector$6.CONTENT), this._getContent());
 
       $tip.removeClass(ClassName$6.FADE + ' ' + ClassName$6.SHOW);
@@ -5693,6 +5806,22 @@ var Popover = function (_Tooltip) {
       });
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      $.fn[NAME$6] = Popover._jQueryInterface;
+      $.fn[NAME$6].Constructor = Popover;
+      $.fn[NAME$6].noConflict = function () {
+        $.fn[NAME$6] = JQUERY_NO_CONFLICT$6;
+        return Popover._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
 
 
@@ -5735,12 +5864,11 @@ var Popover = function (_Tooltip) {
   return Popover;
 }(Tooltip);
 
-$.fn[NAME$6] = Popover._jQueryInterface;
-$.fn[NAME$6].Constructor = Popover;
-$.fn[NAME$6].noConflict = function () {
-  $.fn[NAME$6] = JQUERY_NO_CONFLICT$6;
-  return Popover._jQueryInterface;
-};
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    Popover._init();
+  });
+}
 
 /**
  * --------------------------------------------------------------------------
@@ -5984,10 +6112,10 @@ var ScrollSpy = function () {
         $link.addClass(ClassName$8.ACTIVE);
       } else {
         // Set triggered link as active
-        $link.addClass(ClassName$8.ACTIVE);
+        $link.addClass(ClassName$8.ACTIVE
         // Set triggered links parents as active
         // With both <ul> and <nav> markup a parent is the previous sibling of any nav ancestor
-        $link.parents(Selector$8.NAV_LIST_GROUP).prev(Selector$8.NAV_LINKS + ', ' + Selector$8.LIST_ITEMS).addClass(ClassName$8.ACTIVE);
+        );$link.parents(Selector$8.NAV_LIST_GROUP).prev(Selector$8.NAV_LINKS + ', ' + Selector$8.LIST_ITEMS).addClass(ClassName$8.ACTIVE);
       }
 
       $(this._scrollElement).trigger(Event$8.ACTIVATE, {
@@ -6023,6 +6151,22 @@ var ScrollSpy = function () {
       });
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      $.fn[NAME$8] = ScrollSpy._jQueryInterface;
+      $.fn[NAME$8].Constructor = ScrollSpy;
+      $.fn[NAME$8].noConflict = function () {
+        $.fn[NAME$8] = JQUERY_NO_CONFLICT$8;
+        return ScrollSpy._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
     get: function get$$1() {
       return VERSION$8;
@@ -6036,27 +6180,26 @@ var ScrollSpy = function () {
   return ScrollSpy;
 }();
 
-$(window).on(Event$8.LOAD_DATA_API, function () {
-  var scrollSpys = $.makeArray($(Selector$8.DATA_SPY));
-
-  for (var i = scrollSpys.length; i--;) {
-    var $spy = $(scrollSpys[i]);
-    ScrollSpy._jQueryInterface.call($spy, $spy.data());
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    ScrollSpy._init();
   }
-});
 
-/**
- * ------------------------------------------------------------------------
- * jQuery
- * ------------------------------------------------------------------------
- */
+  /**
+   * ------------------------------------------------------------------------
+   * Data Api implementation
+   * ------------------------------------------------------------------------
+   */
 
-$.fn[NAME$8] = ScrollSpy._jQueryInterface;
-$.fn[NAME$8].Constructor = ScrollSpy;
-$.fn[NAME$8].noConflict = function () {
-  $.fn[NAME$8] = JQUERY_NO_CONFLICT$8;
-  return ScrollSpy._jQueryInterface;
-};
+  );$(window).on(Event$8.LOAD_DATA_API, function () {
+    var scrollSpys = $.makeArray($(Selector$8.DATA_SPY));
+
+    for (var i = scrollSpys.length; i--;) {
+      var $spy = $(scrollSpys[i]);
+      ScrollSpy._jQueryInterface.call($spy, $spy.data());
+    }
+  });
+}
 
 /**
  * --------------------------------------------------------------------------
@@ -6279,6 +6422,33 @@ var Tab = function () {
       });
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * Data Api implementation
+       * ------------------------------------------------------------------------
+       */
+
+      $(document).on(Event$9.CLICK_DATA_API, Selector$9.DATA_TOGGLE, function (event) {
+        event.preventDefault();
+        Tab._jQueryInterface.call($(this), 'show');
+      }
+
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      );$.fn[NAME$9] = Tab._jQueryInterface;
+      $.fn[NAME$9].Constructor = Tab;
+      $.fn[NAME$9].noConflict = function () {
+        $.fn[NAME$9] = JQUERY_NO_CONFLICT$9;
+        return Tab._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
     get: function get$$1() {
       return VERSION$9;
@@ -6287,45 +6457,24 @@ var Tab = function () {
   return Tab;
 }();
 
-$(document).on(Event$9.CLICK_DATA_API, Selector$9.DATA_TOGGLE, function (event) {
-  event.preventDefault();
-  Tab._jQueryInterface.call($(this), 'show');
-});
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    Tab._init();
+  });
+}
 
-/**
- * ------------------------------------------------------------------------
- * jQuery
- * ------------------------------------------------------------------------
- */
+exports.Util = Util;
+exports.Alert = Alert;
+exports.Button = Button;
+exports.Carousel = Carousel;
+exports.Collapse = Collapse;
+exports.Dropdown = Dropdown;
+exports.Modal = Modal;
+exports.Popover = Popover;
+exports.Scrollspy = ScrollSpy;
+exports.Tab = Tab;
+exports.Tooltip = Tooltip;
 
-$.fn[NAME$9] = Tab._jQueryInterface;
-$.fn[NAME$9].Constructor = Tab;
-$.fn[NAME$9].noConflict = function () {
-  $.fn[NAME$9] = JQUERY_NO_CONFLICT$9;
-  return Tab._jQueryInterface;
-};
-
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-alpha.6): index.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
-
-var index = {
-  Util: Util,
-  Alert: Alert,
-  Button: Button,
-  Carousel: Carousel,
-  Collapse: Collapse,
-  Dropdown: Dropdown,
-  Modal: Modal,
-  Popover: Popover,
-  Scrollspy: ScrollSpy,
-  Tab: Tab,
-  Tooltip: Tooltip
-};
-
-return index;
+Object.defineProperty(exports, '__esModule', { value: true });
 
 })));

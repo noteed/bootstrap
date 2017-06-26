@@ -289,10 +289,10 @@ var ScrollSpy = function () {
         $link.addClass(ClassName.ACTIVE);
       } else {
         // Set triggered link as active
-        $link.addClass(ClassName.ACTIVE);
+        $link.addClass(ClassName.ACTIVE
         // Set triggered links parents as active
         // With both <ul> and <nav> markup a parent is the previous sibling of any nav ancestor
-        $link.parents(Selector.NAV_LIST_GROUP).prev(Selector.NAV_LINKS + ', ' + Selector.LIST_ITEMS).addClass(ClassName.ACTIVE);
+        );$link.parents(Selector.NAV_LIST_GROUP).prev(Selector.NAV_LINKS + ', ' + Selector.LIST_ITEMS).addClass(ClassName.ACTIVE);
       }
 
       $(this._scrollElement).trigger(Event.ACTIVATE, {
@@ -328,6 +328,22 @@ var ScrollSpy = function () {
       });
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      $.fn[NAME] = ScrollSpy._jQueryInterface;
+      $.fn[NAME].Constructor = ScrollSpy;
+      $.fn[NAME].noConflict = function () {
+        $.fn[NAME] = JQUERY_NO_CONFLICT;
+        return ScrollSpy._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
     get: function get$$1() {
       return VERSION;
@@ -341,27 +357,26 @@ var ScrollSpy = function () {
   return ScrollSpy;
 }();
 
-$(window).on(Event.LOAD_DATA_API, function () {
-  var scrollSpys = $.makeArray($(Selector.DATA_SPY));
-
-  for (var i = scrollSpys.length; i--;) {
-    var $spy = $(scrollSpys[i]);
-    ScrollSpy._jQueryInterface.call($spy, $spy.data());
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    ScrollSpy._init();
   }
-});
 
-/**
- * ------------------------------------------------------------------------
- * jQuery
- * ------------------------------------------------------------------------
- */
+  /**
+   * ------------------------------------------------------------------------
+   * Data Api implementation
+   * ------------------------------------------------------------------------
+   */
 
-$.fn[NAME] = ScrollSpy._jQueryInterface;
-$.fn[NAME].Constructor = ScrollSpy;
-$.fn[NAME].noConflict = function () {
-  $.fn[NAME] = JQUERY_NO_CONFLICT;
-  return ScrollSpy._jQueryInterface;
-};
+  );$(window).on(Event.LOAD_DATA_API, function () {
+    var scrollSpys = $.makeArray($(Selector.DATA_SPY));
+
+    for (var i = scrollSpys.length; i--;) {
+      var $spy = $(scrollSpys[i]);
+      ScrollSpy._jQueryInterface.call($spy, $spy.data());
+    }
+  });
+}
 
 return ScrollSpy;
 

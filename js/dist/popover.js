@@ -1,11 +1,12 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery'), require('./tooltip.js')) :
-	typeof define === 'function' && define.amd ? define(['jquery', './tooltip.js'], factory) :
-	(global.Popover = factory(global.$,global.Tooltip));
-}(this, (function ($,Tooltip) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery'), require('./tooltip.js'), require('./util.js')) :
+	typeof define === 'function' && define.amd ? define(['jquery', './tooltip.js', './util.js'], factory) :
+	(global.Popover = factory(global.$,global.Tooltip,global.Util));
+}(this, (function ($,Tooltip,Util) { 'use strict';
 
 $ = $ && 'default' in $ ? $['default'] : $;
 Tooltip = Tooltip && 'default' in Tooltip ? Tooltip['default'] : Tooltip;
+Util = Util && 'default' in Util ? Util['default'] : Util;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -180,10 +181,10 @@ var Popover = function (_Tooltip) {
   }, {
     key: 'setContent',
     value: function setContent() {
-      var $tip = $(this.getTipElement());
+      var $tip = $(this.getTipElement()
 
       // we use append for html objects to maintain js events
-      this.setElementContent($tip.find(Selector.TITLE), this.getTitle());
+      );this.setElementContent($tip.find(Selector.TITLE), this.getTitle());
       this.setElementContent($tip.find(Selector.CONTENT), this._getContent());
 
       $tip.removeClass(ClassName.FADE + ' ' + ClassName.SHOW);
@@ -233,6 +234,22 @@ var Popover = function (_Tooltip) {
       });
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      $.fn[NAME] = Popover._jQueryInterface;
+      $.fn[NAME].Constructor = Popover;
+      $.fn[NAME].noConflict = function () {
+        $.fn[NAME] = JQUERY_NO_CONFLICT;
+        return Popover._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
 
 
@@ -275,12 +292,11 @@ var Popover = function (_Tooltip) {
   return Popover;
 }(Tooltip);
 
-$.fn[NAME] = Popover._jQueryInterface;
-$.fn[NAME].Constructor = Popover;
-$.fn[NAME].noConflict = function () {
-  $.fn[NAME] = JQUERY_NO_CONFLICT;
-  return Popover._jQueryInterface;
-};
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    Popover._init();
+  });
+}
 
 return Popover;
 

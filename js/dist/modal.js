@@ -323,8 +323,8 @@ var Modal = function () {
     value: function _enforceFocus() {
       var _this4 = this;
 
-      $(document).off(Event.FOCUSIN) // guard against infinite focus loop
-      .on(Event.FOCUSIN, function (event) {
+      $(document).off(Event.FOCUSIN // guard against infinite focus loop
+      ).on(Event.FOCUSIN, function (event) {
         if (document !== event.target && _this4._element !== event.target && !$(_this4._element).has(event.target).length) {
           _this4._element.focus();
         }
@@ -496,17 +496,17 @@ var Modal = function () {
           var actualPadding = $(element)[0].style.paddingRight;
           var calculatedPadding = $(element).css('padding-right');
           $(element).data('padding-right', actualPadding).css('padding-right', parseFloat(calculatedPadding) + _this9._scrollbarWidth + 'px');
-        });
+        }
 
         // Adjust navbar-toggler margin
-        $(Selector.NAVBAR_TOGGLER).each(function (index, element) {
+        );$(Selector.NAVBAR_TOGGLER).each(function (index, element) {
           var actualMargin = $(element)[0].style.marginRight;
           var calculatedMargin = $(element).css('margin-right');
           $(element).data('margin-right', actualMargin).css('margin-right', parseFloat(calculatedMargin) + _this9._scrollbarWidth + 'px');
-        });
+        }
 
         // Adjust body padding
-        var actualPadding = document.body.style.paddingRight;
+        );var actualPadding = document.body.style.paddingRight;
         var calculatedPadding = $('body').css('padding-right');
         $('body').data('padding-right', actualPadding).css('padding-right', parseFloat(calculatedPadding) + this._scrollbarWidth + 'px');
       }
@@ -520,18 +520,18 @@ var Modal = function () {
         if (typeof padding !== 'undefined') {
           $(element).css('padding-right', padding).removeData('padding-right');
         }
-      });
+      }
 
       // Restore navbar-toggler margin
-      $(Selector.NAVBAR_TOGGLER).each(function (index, element) {
+      );$(Selector.NAVBAR_TOGGLER).each(function (index, element) {
         var margin = $(element).data('margin-right');
         if (typeof margin !== 'undefined') {
           $(element).css('margin-right', margin).removeData('margin-right');
         }
-      });
+      }
 
       // Restore body padding
-      var padding = $('body').data('padding-right');
+      );var padding = $('body').data('padding-right');
       if (typeof padding !== 'undefined') {
         $('body').css('padding-right', padding).removeData('padding-right');
       }
@@ -573,6 +573,60 @@ var Modal = function () {
       });
     }
   }, {
+    key: '_init',
+    value: function _init() {
+      /**
+       * ------------------------------------------------------------------------
+       * Data Api implementation
+       * ------------------------------------------------------------------------
+       */
+
+      $(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE, function (event) {
+        var _this10 = this;
+
+        var target = void 0;
+        var selector = Util.getSelectorFromElement(this);
+
+        if (selector) {
+          target = $(selector)[0];
+        }
+
+        var config = $(target).data(DATA_KEY) ? 'toggle' : $.extend({}, $(target).data(), $(this).data());
+
+        if (this.tagName === 'A' || this.tagName === 'AREA') {
+          event.preventDefault();
+        }
+
+        var $target = $(target).one(Event.SHOW, function (showEvent) {
+          if (showEvent.isDefaultPrevented()) {
+            // only register focus restorer if modal will actually get shown
+            return;
+          }
+
+          $target.one(Event.HIDDEN, function () {
+            if ($(_this10).is(':visible')) {
+              _this10.focus();
+            }
+          });
+        });
+
+        Modal._jQueryInterface.call($(target), config, this);
+      }
+
+      /**
+       * ------------------------------------------------------------------------
+       * jQuery
+       * ------------------------------------------------------------------------
+       */
+
+      );$.fn[NAME] = Modal._jQueryInterface;
+      $.fn[NAME].Constructor = Modal;
+      $.fn[NAME].noConflict = function () {
+        $.fn[NAME] = JQUERY_NO_CONFLICT;
+        return Modal._jQueryInterface;
+      };
+    }
+  }, {
     key: 'VERSION',
     get: function get$$1() {
       return VERSION;
@@ -586,50 +640,11 @@ var Modal = function () {
   return Modal;
 }();
 
-$(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE, function (event) {
-  var _this10 = this;
-
-  var target = void 0;
-  var selector = Util.getSelectorFromElement(this);
-
-  if (selector) {
-    target = $(selector)[0];
-  }
-
-  var config = $(target).data(DATA_KEY) ? 'toggle' : $.extend({}, $(target).data(), $(this).data());
-
-  if (this.tagName === 'A' || this.tagName === 'AREA') {
-    event.preventDefault();
-  }
-
-  var $target = $(target).one(Event.SHOW, function (showEvent) {
-    if (showEvent.isDefaultPrevented()) {
-      // only register focus restorer if modal will actually get shown
-      return;
-    }
-
-    $target.one(Event.HIDDEN, function () {
-      if ($(_this10).is(':visible')) {
-        _this10.focus();
-      }
-    });
+if (!Util.nodeEnv()) {
+  $(document).ready(function () {
+    Modal._init();
   });
-
-  Modal._jQueryInterface.call($(target), config, this);
-});
-
-/**
- * ------------------------------------------------------------------------
- * jQuery
- * ------------------------------------------------------------------------
- */
-
-$.fn[NAME] = Modal._jQueryInterface;
-$.fn[NAME].Constructor = Modal;
-$.fn[NAME].noConflict = function () {
-  $.fn[NAME] = JQUERY_NO_CONFLICT;
-  return Modal._jQueryInterface;
-};
+}
 
 return Modal;
 
