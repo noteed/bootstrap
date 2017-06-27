@@ -1,3 +1,16 @@
+This is a 2017-06-27 copy of the v4-dev branch of twbs/bootstrap with a
+Dockerfile and associated script to run `npm run watch` and `jekyll serve`.
+
+To use this repository, clone it then:
+
+```
+./build.sh  # Once.
+./init.sh   # Once.
+./run.sh
+```
+
+<br>
+
 <p align="center">
   <a href="https://v4-alpha.getbootstrap.com">
     <img src="http://v4-alpha.getbootstrap.com/assets/brand/bootstrap-solid.svg" width=72 height=72>
